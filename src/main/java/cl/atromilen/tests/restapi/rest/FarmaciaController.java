@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +17,6 @@ import java.util.List;
  * Created by alvarotromilen on 4/15/20.
  */
 @RestController
-@RequestMapping("/farmacia")
 public class FarmaciaController {
     private static final Logger LOGGER = LoggerFactory.getLogger(FarmaciaController.class);
 
@@ -26,7 +24,7 @@ public class FarmaciaController {
     @Autowired
     private FarmaciaService farmaciaService;
 
-    @GetMapping("/filtrar-por-comuna")
+    @GetMapping("/farmacias")
     public ResponseEntity<List<LocalFarmacia>> consultar(@RequestParam(value = "comuna") String comuna,
                                                          @RequestParam(value = "nombre_local") String nombreLocal){
         LOGGER.info("FarmaciaController.consultar - comuna: {}, nombreLocal: {}", comuna, nombreLocal);

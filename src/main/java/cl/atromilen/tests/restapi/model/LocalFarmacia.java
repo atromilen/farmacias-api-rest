@@ -1,12 +1,15 @@
 package cl.atromilen.tests.restapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Created by alvarotromilen on 4/15/20.
  */
 public class LocalFarmacia {
     private String localNombre;
     private String localDireccion;
-    private String comunaNombre; //TODO Este campo se debe ocultar en el response JSON
+    @JsonIgnore
+    private String comunaNombre;
     private Integer localTelefono;
     private Double localLatitud;
     private Double localLongitud;
