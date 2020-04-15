@@ -9,7 +9,6 @@ import java.util.List;
 /**
  * Created by alvarotromilen on 4/15/20.
  */
-@Service("mockService")
 public class MockFarmaciaService implements FarmaciaService {
 
     @Override

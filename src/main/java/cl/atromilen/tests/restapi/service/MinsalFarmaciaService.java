@@ -9,7 +9,7 @@ import java.util.List;
  * Created by alvarotromilen on 4/15/20.
  */
 //TODO pendiente implementación con RestTemplate para consumir API de Minsal
-@Service("minsalFarmaciaService")
+@Service
 public class MinsalFarmaciaService implements FarmaciaService{
 
     @Override
