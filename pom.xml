@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>cl.atromilen</groupId>
-	<artifactId>farmacias-rest</artifactId>
+	<artifactId>localFarmacias-rest</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>farmacias-rest</name>
+	<name>localFarmacias-rest</name>
 	<description>Farmacias operativas</description>
 
 	<properties>
