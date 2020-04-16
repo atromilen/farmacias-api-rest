@@ -30,4 +30,11 @@ public class ErrorHandler {
         return new Error(404, msg);
     }
 
+    @ExceptionHandler(ComunasNotFoundException.class)
+    @ResponseStatus(HttpStatus.GATEWAY_TIMEOUT)
+    public @ResponseBody Error comunasNotFound(){
+
+        return new Error(504, "Comunas no disponibles en este momento. Por favor, intente más tarde.");
+    }
+
 }

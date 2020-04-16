@@ -6,11 +6,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Created by alvarotromilen on 4/15/20.
+ * Capa de Servicio que consumirá la API del MINSAL y realizará la lógica para retornar
+ * los registros solicitados por la capa Controller.
  */
 //TODO pendiente implementación con RestTemplate para consumir API de Minsal
 @Service
-public class MinsalFarmaciaService implements FarmaciaService{
+public class FarmaciaServiceImpl implements FarmaciaService{
 
     @Override
     public List<LocalFarmacia> getFarmaciaByComuna(String comuna) {
