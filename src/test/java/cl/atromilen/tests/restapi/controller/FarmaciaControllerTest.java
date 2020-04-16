@@ -29,8 +29,13 @@ public class FarmaciaControllerTest {
     private FarmaciaService farmaciaService;
 
     @Test
-    public void consultaFarmaciasSinEnviarComunaTest() throws Exception {
-        //TODO Implementación pendiente
+    public void consultaFallidaPorNoRecibirComuna() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api-rest/farmacias")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("nombre_local", "anyString")
+        ).andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -39,9 +44,9 @@ public class FarmaciaControllerTest {
                 .thenReturn(ListaFarmaciasMock.getAll());
 
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/farmacias")
+                MockMvcRequestBuilders.get("/api-rest/farmacias")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("comuna", "someMockValue")
+                        .param("comuna", "anyString")
         ).andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk());
     }
@@ -52,24 +57,37 @@ public class FarmaciaControllerTest {
                 .thenReturn(ListaFarmaciasMock.getCruzVerde1());
 
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/farmacias")
+                MockMvcRequestBuilders.get("/api-rest/farmacias")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("comuna", "mockComuna")
-                        .param("nombre_local", "mockNombreLocal")
+                        .param("comuna", "anyString")
+                        .param("nombre_local", "anyString")
         ).andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void testConsultaSinResultadosDebeRetornarStatus404() throws Exception {
-        Mockito.when(farmaciaService.getFarmaciaByComunaAndNombreLocal(anyString(), anyString()))
-                .thenReturn(new ArrayList<>());
+    public void testConsultaPorComunaSinResultadoDebeRetornarStatus404() throws Exception {
+        Mockito.when(farmaciaService.getFarmaciaByComuna(anyString()))
+                .thenReturn(null);
 
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/farmacias")
+                MockMvcRequestBuilders.get("/api-rest/farmacias")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("comuna", "mockComuna")
-                        .param("nombre_local", "mockNombreLocal")
+                        .param("comuna", "COMUNATEST")
+        ).andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testConsultaPorComunaYLocalSinResultadoDebeRetornarStatus404() throws Exception {
+        Mockito.when(farmaciaService.getFarmaciaByComunaAndNombreLocal(anyString(), anyString()))
+                .thenReturn(null);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api-rest/farmacias")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("comuna", "COMUNATEST")
+                        .param("nombre_local", "LOCALTEST")
         ).andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isNotFound());
     }

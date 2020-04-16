@@ -1,65 +1,72 @@
 package cl.atromilen.tests.restapi.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Created by alvarotromilen on 4/15/20.
+ * @author Álvaro Tromilen (alvaro.tromilen@gmail.com)
+ *
+ * Modelo representativo de un objeto de tipo Farmacia, con los datos a exponer en la respuesta JSON
+ * de la API RESTful.
  */
 public class LocalFarmacia {
-    private String localNombre;
-    private String localDireccion;
+    private String nombreLocal;
     @JsonIgnore
-    private String comunaNombre;
-    private Integer localTelefono;
-    private Double localLatitud;
-    private Double localLongitud;
+    private String direccion; //Se unificará su visualización mediante @JsonProperty
+    @JsonIgnore
+    private String nombreComuna; //Se unificará su visualización mediante @JsonProperty
+    private Integer telefono;
+    private Double latitud;
+    private Double longitud;
 
-    public String getLocalNombre() {
-        return localNombre;
+    public String getNombreLocal() {
+        return nombreLocal;
     }
 
-    public void setLocalNombre(String localNombre) {
-        this.localNombre = localNombre;
+    public void setNombreLocal(String nombreLocal) {
+        this.nombreLocal = nombreLocal;
     }
 
-    public String getLocalDireccion() {
-        return localDireccion;
+    //Con esto, unifico la dirección y la comuna que estaban por separados, para entregar una dirección completa
+    @JsonProperty(value = "direccion", access = JsonProperty.Access.READ_ONLY)
+    public String getDireccion() {
+        return String.format("%s, %s", direccion, nombreComuna);
     }
 
-    public void setLocalDireccion(String localDireccion) {
-        this.localDireccion = localDireccion;
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 
-    public String getComunaNombre() {
-        return comunaNombre;
+    public String getNombreComuna() {
+        return nombreComuna;
     }
 
-    public void setComunaNombre(String comunaNombre) {
-        this.comunaNombre = comunaNombre;
+    public void setNombreComuna(String nombreComuna) {
+        this.nombreComuna = nombreComuna;
     }
 
-    public Integer getLocalTelefono() {
-        return localTelefono;
+    public Integer getTelefono() {
+        return telefono;
     }
 
-    public void setLocalTelefono(Integer localTelefono) {
-        this.localTelefono = localTelefono;
+    public void setTelefono(Integer telefono) {
+        this.telefono = telefono;
     }
 
-    public Double getLocalLatitud() {
-        return localLatitud;
+    public Double getLatitud() {
+        return latitud;
     }
 
-    public void setLocalLatitud(Double localLatitud) {
-        this.localLatitud = localLatitud;
+    public void setLatitud(Double latitud) {
+        this.latitud = latitud;
     }
 
-    public Double getLocalLongitud() {
-        return localLongitud;
+    public Double getLongitud() {
+        return longitud;
     }
 
-    public void setLocalLongitud(Double localLongitud) {
-        this.localLongitud = localLongitud;
+    public void setLongitud(Double longitud) {
+        this.longitud = longitud;
     }
 }
 

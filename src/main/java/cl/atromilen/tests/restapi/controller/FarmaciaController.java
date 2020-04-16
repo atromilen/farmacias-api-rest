@@ -1,12 +1,13 @@
 package cl.atromilen.tests.restapi.controller;
 
+import cl.atromilen.tests.restapi.errorhandler.FarmaciaNotFoundException;
 import cl.atromilen.tests.restapi.model.LocalFarmacia;
 import cl.atromilen.tests.restapi.service.FarmaciaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,8 +15,14 @@ import java.util.List;
 
 /**
  * Created by alvarotromilen on 4/15/20.
+ *
+ * @author Álvaro Tromilen
+ *
+ * Controlador REST que manejará las peticiones realizadas a la API RESTful, junto con las respuestas
+ * y el manejo de eventuales errores, utilizando (implícitamente) ControllerAdvice.
  */
 @RestController
+@RequestMapping("/api-rest")
 public class FarmaciaController {
     private static final Logger LOGGER = LoggerFactory.getLogger(FarmaciaController.class);
 
@@ -26,21 +33,22 @@ public class FarmaciaController {
     }
 
     @GetMapping("/farmacias")
-    public ResponseEntity<List<LocalFarmacia>> consultar(@RequestParam(value = "comuna") String comuna,
-                                                         @RequestParam(value = "nombre_local", required = false) String nombreLocal){
+    public ResponseEntity<List<LocalFarmacia>> consultar(
+            @RequestParam(value = "comuna") String comuna,
+            @RequestParam(value = "nombre_local", required = false) String nombreLocal) {
         LOGGER.info("FarmaciaController.consultar - comuna: {}, nombreLocal: {}", comuna, nombreLocal);
-        //TODO agregar valicación de campo comuna not null ni vacío
-
-        if(nombreLocal != null && !"".equalsIgnoreCase(nombreLocal.trim())){
-            LOGGER.info("1");
-            List<LocalFarmacia> listaFarmacias = farmaciaService.getFarmaciaByComunaAndNombreLocal(comuna, nombreLocal);
-            HttpStatus httpStatus = listaFarmacias.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND;
-
-            return new ResponseEntity<>(listaFarmacias, httpStatus);
+        List<LocalFarmacia> listaFarmacias;
+        if (nombreLocal != null && !"".equalsIgnoreCase(nombreLocal.trim())) {
+            listaFarmacias = farmaciaService.getFarmaciaByComunaAndNombreLocal(comuna, nombreLocal);
         } else {
-            LOGGER.info("2");
-            return ResponseEntity.ok(farmaciaService.getFarmaciaByComuna(comuna));
+            listaFarmacias = farmaciaService.getFarmaciaByComuna(comuna);
         }
+
+        if (listaFarmacias == null) {
+            throw new FarmaciaNotFoundException(comuna, nombreLocal);
+        }
+
+        return ResponseEntity.ok(listaFarmacias);
     }
 
 }
