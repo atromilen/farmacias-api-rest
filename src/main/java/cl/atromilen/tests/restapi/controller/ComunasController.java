@@ -1,6 +1,5 @@
 package cl.atromilen.tests.restapi.controller;
 
-import cl.atromilen.tests.restapi.errorhandler.ComunasNotFoundException;
 import cl.atromilen.tests.restapi.service.ComunaService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

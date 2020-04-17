@@ -1,6 +1,6 @@
 package cl.atromilen.tests.restapi.controller;
 
-import cl.atromilen.tests.restapi.errorhandler.ComunasNotFoundException;
+import cl.atromilen.tests.restapi.exception.ComunaServiceException;
 import cl.atromilen.tests.restapi.mocks.ComunasMock;
 import cl.atromilen.tests.restapi.service.ComunaService;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ class ComunasControllerTest {
     @Test
     void testConsultaComunasAlMinsalTrajoUnOjetoNulo() throws Exception {
         Mockito.when(comunaService.getRMComunasAsCombobox())
-                .thenThrow(new ComunasNotFoundException());
+                .thenThrow(new ComunaServiceException());
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api-rest/comunas").contentType(MediaType.TEXT_HTML)

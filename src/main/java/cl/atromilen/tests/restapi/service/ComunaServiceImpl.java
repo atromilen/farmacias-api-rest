@@ -1,10 +1,13 @@
 package cl.atromilen.tests.restapi.service;
 
-import cl.atromilen.tests.restapi.errorhandler.ComunasNotFoundException;
+import cl.atromilen.tests.restapi.exception.ComunaServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -35,7 +38,7 @@ public class ComunaServiceImpl implements ComunaService{
         LOGGER.info("Response de la API Minsal: {}", response.getBody());
 
         if (response.getBody() == null || "".equalsIgnoreCase(response.getBody())){
-            throw new ComunasNotFoundException();
+            throw new ComunaServiceException();
         }
         return response.getBody();
     }

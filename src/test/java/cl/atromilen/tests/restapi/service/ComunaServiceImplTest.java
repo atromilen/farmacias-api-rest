@@ -1,6 +1,6 @@
 package cl.atromilen.tests.restapi.service;
 
-import cl.atromilen.tests.restapi.errorhandler.ComunasNotFoundException;
+import cl.atromilen.tests.restapi.exception.ComunaServiceException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,8 +19,8 @@ import static org.mockito.Mockito.when;
 /**
  * @author Álvaro Tromilen
  *
- * Estas son pruebas de integración para testear el consumo de la API del Minsal para obtener comunas.
- * No considerar como pruebas unitarias (dependen de una conexión http con la URL).
+ * Pruebas unitarias y aisladas para no depender de una conexión real con la API del minsal (pruebas
+ * de integración), permitiendo probar los distintos flujos de Service para recuperar comunas de la RM.
  */
 @ExtendWith(SpringExtension.class)
 class ComunaServiceImplTest {
@@ -51,7 +51,7 @@ class ComunaServiceImplTest {
         when(restTemplate.postForEntity(URL, getRequest(), String.class))
                 .thenReturn(new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR));
 
-        Assertions.assertThrows(ComunasNotFoundException.class, () -> comunaService.getRMComunasAsCombobox());
+        Assertions.assertThrows(ComunaServiceException.class, () -> comunaService.getRMComunasAsCombobox());
 
     }
 

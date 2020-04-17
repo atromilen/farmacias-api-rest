@@ -1,5 +1,8 @@
 package cl.atromilen.tests.restapi.service;
 
+import cl.atromilen.tests.restapi.exception.FarmaciaNotFoundException;
+import cl.atromilen.tests.restapi.exception.FarmaciaServiceException;
+import cl.atromilen.tests.restapi.exception.InternalAPIException;
 import cl.atromilen.tests.restapi.model.LocalFarmacia;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,8 +23,8 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 /**
  * @author Álvaro Tromilen
  *
- * Estas son pruebas de integración para testear el consumo de la API del Minsal para obtener farmacias.
- * No considerar como pruebas unitarias (dependen de una conexión http con la URL).
+ * Pruebas unitarias y aisladas para no depender de una conexión real con la API del minsal (pruebas
+ * de integración), permitiendo probar los distintos flujos de Service para recuperar farmacias de la RM.
  */
 @ExtendWith(SpringExtension.class)
 @RestClientTest(FarmaciaServiceImpl.class)
@@ -36,10 +39,9 @@ class FarmaciaServiceImplTest {
     private FarmaciaService farmaciaService;
 
     @Test
-    void integrationTestConsultaDeFarmaciaPorComunaExitoso() {
-        String expected = getFarmaciasJSON();
+    void testConsultaDeFarmaciaPorComunaExitoso() {
         this.server.expect(requestTo(URL))
-                .andRespond(withSuccess(expected, MediaType.TEXT_HTML));
+                .andRespond(withSuccess(getFarmaciasJSON(), MediaType.TEXT_HTML));
 
         List<LocalFarmacia> farmacias = farmaciaService.getFarmaciaByComuna("RECOLETA");
         Assertions.assertNotNull(farmacias);
@@ -49,27 +51,58 @@ class FarmaciaServiceImplTest {
     }
 
     @Test
-    void integrationTestConsultaDeFarmaciaPorComunaYNombreLocalExitoso() {
+    void testConsultaDeFarmaciaPorComunaYNombreLocalExitoso() {
+        this.server.expect(requestTo(URL))
+                .andRespond(withSuccess(getFarmaciasJSON(), MediaType.TEXT_HTML));
+
         List<LocalFarmacia> farmacias = farmaciaService.getFarmaciaByComunaAndNombreLocal("BUIN", "AHUMADA");
-        LocalFarmacia farmacia = farmacias.get(1);
+        LocalFarmacia farmacia = farmacias.get(0);
         LOGGER.debug("farmacia: {}", farmacia);
         Assertions.assertEquals("BUIN", farmacia.getNombreComuna().trim());
         Assertions.assertEquals("AHUMADA", farmacia.getNombreLocal().trim());
     }
 
+    @Test
+    void testConsultaDeFarmaciaPorComunaSinResultadosGeneraNotfoundException() {
+        this.server.expect(requestTo(URL))
+                .andRespond(withSuccess(getFarmaciasJSON(), MediaType.TEXT_HTML));
+
+        Assertions.assertThrows(FarmaciaNotFoundException.class, () ->
+                farmaciaService.getFarmaciaByComuna("COMUNA_NO_EXISTE"));
+    }
+
+    @Test
+    void testConsultaDeFarmaciaPorComunaYLocalSinResultadosGeneraNotfoundException() {
+        this.server.expect(requestTo(URL))
+                .andRespond(withSuccess(getFarmaciasJSON(), MediaType.TEXT_HTML));
+
+        Assertions.assertThrows(FarmaciaNotFoundException.class, () ->
+                farmaciaService.getFarmaciaByComunaAndNombreLocal("COMUNA_NO_EXISTE", "LOCAL_NO_EXISTE"));
+    }
+
+    @Test
+    void testConsultaSinResultadosLanzaUnFarmaciaServiceException() {
+        this.server.expect(requestTo(URL))
+                .andRespond(withSuccess("[]", MediaType.TEXT_HTML));
+
+        Assertions.assertThrows(FarmaciaServiceException.class, () -> farmaciaService.getFarmaciaByComuna("ANYCOMUNA"));
+    }
+
+    @Test
+    void testConsultaFallidaPorErrorEnMapeoJSON() {
+        this.server.expect(requestTo(URL))
+                .andRespond(withSuccess("{\"JSON\":\"INVALIDO\"}", MediaType.TEXT_HTML));
+
+        Assertions.assertThrows(InternalAPIException.class, () -> farmaciaService.getFarmaciaByComuna("ANYCOMUNA"));
+    }
+
     private String getFarmaciasJSON() {
-        return
-                "[{\"fecha\":\"15-04-2020\",\"local_id\":\"534\",\"local_nombre\":\"TORRES\n MPD\"," +
-                        "\"comuna_nombre\":\"RECOLETA\",\"localidad_nombre\":\"RECOLETA\"," +
-                        "\"local_direccion\":\"AVENIDA EL SALTO\n 2972\"," +
-                        "\"funcionamiento_hora_apertura\":\"10:30 hrs.\"," +
-                        "\"funcionamiento_hora_cierre\":\"19:30\n hrs.\",\"local_telefono\":\"+560225053570\"," +
-                        "\"local_lat\":\"-33.3996351\",\"local_lng\":\"-70.62894990000001\"," +
-                        "\"funcionamiento_dia\":\"miercoles\",\"fk_region\":\"7\",\"fk_comuna\":\"122\"}" +
-                        ",{\"fecha\":\"15-04-2020\",\"local_id\":\"753\",\"local_nombre\":\"AHUMADA\",\"comuna_nombre\":\"BUIN\"," +
-                        "\"localidad_nombre\":\"BUIN\",\"local_direccion\":\"SAN\n MARTIN 174\"," +
-                        "\"funcionamiento_hora_apertura\":\"08:30 hrs.\",\"funcionamiento_hora_cierre\":\"22:00\n hrs.\"," +
-                        "\"local_telefono\":\"+560226313086\",\"local_lat\":\"-33.732\",\"local_lng\":\"-70.735941\"," +
-                        "\"funcionamiento_dia\":\"miercoles\",\"fk_region\":\"7\",\"fk_comuna\":\"83\"}]";
+        String json =
+                "[{\"local_nombre\":\"TORRES\n MPD\",\"comuna_nombre\":\"RECOLETA\",\"local_direccion\":\"AVENIDA EL SALTO\n 2972\"," +
+                        "\"local_telefono\":\"+560225053570\",\"local_lat\":\"-33.3996351\",\"local_lng\":\"-70.62894990000001\"}," +
+                        "{\"local_nombre\":\"AHUMADA\",\"comuna_nombre\":\"BUIN\",\"local_direccion\":\"SAN\n MARTIN 174\"," +
+                        "\"local_telefono\":\"+560226313086\",\"local_lat\":\"-33.732\",\"local_lng\":\"-70.735941\"}]";
+
+        return json.replace("\n", "").replace("\r", "").trim();
     }
 }

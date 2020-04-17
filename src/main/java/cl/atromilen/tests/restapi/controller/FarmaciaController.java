@@ -1,6 +1,5 @@
 package cl.atromilen.tests.restapi.controller;
 
-import cl.atromilen.tests.restapi.errorhandler.FarmaciaNotFoundException;
 import cl.atromilen.tests.restapi.model.LocalFarmacia;
 import cl.atromilen.tests.restapi.service.FarmaciaService;
 import org.slf4j.Logger;

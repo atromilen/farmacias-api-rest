@@ -1,4 +1,4 @@
-package cl.atromilen.tests.restapi.errorhandler;
+package cl.atromilen.tests.restapi.exception.handler;
 
 /**
  * @author Álvaro Tromilen (alvaro.tromilen@gmail.com)

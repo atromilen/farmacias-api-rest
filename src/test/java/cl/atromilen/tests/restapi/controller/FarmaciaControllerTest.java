@@ -1,6 +1,8 @@
 package cl.atromilen.tests.restapi.controller;
 
-import cl.atromilen.tests.restapi.errorhandler.ComunasNotFoundException;
+import cl.atromilen.tests.restapi.exception.FarmaciaNotFoundException;
+import cl.atromilen.tests.restapi.exception.FarmaciaServiceException;
+import cl.atromilen.tests.restapi.exception.InternalAPIException;
 import cl.atromilen.tests.restapi.mocks.ListaFarmaciasMock;
 import cl.atromilen.tests.restapi.service.FarmaciaService;
 import org.junit.jupiter.api.Test;
@@ -67,20 +69,20 @@ public class FarmaciaControllerTest {
     @Test
     public void testConsultaPorComunaSinResultadoDebeRetornarStatus404() throws Exception {
         Mockito.when(farmaciaService.getFarmaciaByComuna(anyString()))
-                .thenThrow(new ComunasNotFoundException());
+                .thenThrow(new FarmaciaNotFoundException("COMUNATEST"));
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api-rest/farmacias")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("comuna", "COMUNATEST")
         ).andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isGatewayTimeout());
+                .andExpect(status().isNotFound());
     }
 
     @Test
     public void testConsultaPorComunaYLocalSinResultadoDebeRetornarStatus404() throws Exception {
         Mockito.when(farmaciaService.getFarmaciaByComunaAndNombreLocal(anyString(), anyString()))
-                .thenThrow(new ComunasNotFoundException());
+                .thenThrow(new FarmaciaNotFoundException("COMUNATEST", "LOCALTEST"));
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api-rest/farmacias")
@@ -88,6 +90,32 @@ public class FarmaciaControllerTest {
                         .param("comuna", "COMUNATEST")
                         .param("nombre_local", "LOCALTEST")
         ).andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isGatewayTimeout());
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testServiceUnavailablePorErrorEnRespuestaDeServicioDeBusquedaDeFarmacias() throws Exception {
+        Mockito.when(farmaciaService.getFarmaciaByComuna(anyString()))
+                .thenThrow(new FarmaciaServiceException());
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api-rest/farmacias")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("comuna", "COMUNATEST")
+        ).andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isServiceUnavailable());
+    }
+
+    @Test
+    void testInternalAPIExceptionProvocaInternalServerError() throws Exception {
+        Mockito.when(farmaciaService.getFarmaciaByComuna(anyString()))
+                .thenThrow(new InternalAPIException());
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api-rest/farmacias")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("comuna", "COMUNATEST")
+        ).andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isInternalServerError());
     }
 }
