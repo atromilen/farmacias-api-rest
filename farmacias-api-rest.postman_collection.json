@@ -1,0 +1,175 @@
+{
+	"info": {
+		"_postman_id": "0d93175f-7544-4132-8158-47cdbf0acc6d",
+		"name": "farmacias-api-rest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Listar comunas de la RM",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5d5b86db-e396-4001-80c9-b8ddbd61acf0",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api-rest/comunas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api-rest",
+						"comunas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Farmacias de turno en comuna Paine",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5d5b86db-e396-4001-80c9-b8ddbd61acf0",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api-rest/farmacias?comuna=paine",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api-rest",
+						"farmacias"
+					],
+					"query": [
+						{
+							"key": "comuna",
+							"value": "paine"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Farmacia \"TORRES MPD\" en Recoleta",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5d5b86db-e396-4001-80c9-b8ddbd61acf0",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api-rest/farmacias?comuna=recoleta&nombre_local=torres mpd",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api-rest",
+						"farmacias"
+					],
+					"query": [
+						{
+							"key": "comuna",
+							"value": "recoleta"
+						},
+						{
+							"key": "nombre_local",
+							"value": "torres mpd"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Farmacia no encontrada (404 Not Found)",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5d5b86db-e396-4001-80c9-b8ddbd61acf0",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api-rest/farmacias?comuna=recoleta&nombre_local=inexistente",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api-rest",
+						"farmacias"
+					],
+					"query": [
+						{
+							"key": "comuna",
+							"value": "recoleta"
+						},
+						{
+							"key": "nombre_local",
+							"value": "inexistente"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
