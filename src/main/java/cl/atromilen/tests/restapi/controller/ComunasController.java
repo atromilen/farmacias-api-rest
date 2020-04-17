@@ -28,10 +28,6 @@ public class ComunasController {
     public ResponseEntity<String> getComunas(){
         String comboboxComunas = comunaService.getRMComunasAsCombobox();
 
-        if(comboboxComunas == null){
-            throw new ComunasNotFoundException();
-        }
-
         return ResponseEntity.ok(comboboxComunas);
     }
 

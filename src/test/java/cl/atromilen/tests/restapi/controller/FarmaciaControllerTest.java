@@ -1,5 +1,6 @@
 package cl.atromilen.tests.restapi.controller;
 
+import cl.atromilen.tests.restapi.errorhandler.ComunasNotFoundException;
 import cl.atromilen.tests.restapi.mocks.ListaFarmaciasMock;
 import cl.atromilen.tests.restapi.service.FarmaciaService;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ public class FarmaciaControllerTest {
     private FarmaciaService farmaciaService;
 
     @Test
-    public void consultaFallidaPorNoRecibirComuna() throws Exception {
+    public void testConsultaFallidaPorNoRecibirComuna() throws Exception {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api-rest/farmacias")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -66,20 +67,20 @@ public class FarmaciaControllerTest {
     @Test
     public void testConsultaPorComunaSinResultadoDebeRetornarStatus404() throws Exception {
         Mockito.when(farmaciaService.getFarmaciaByComuna(anyString()))
-                .thenReturn(null);
+                .thenThrow(new ComunasNotFoundException());
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api-rest/farmacias")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("comuna", "COMUNATEST")
         ).andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isGatewayTimeout());
     }
 
     @Test
     public void testConsultaPorComunaYLocalSinResultadoDebeRetornarStatus404() throws Exception {
         Mockito.when(farmaciaService.getFarmaciaByComunaAndNombreLocal(anyString(), anyString()))
-                .thenReturn(null);
+                .thenThrow(new ComunasNotFoundException());
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api-rest/farmacias")
@@ -87,6 +88,6 @@ public class FarmaciaControllerTest {
                         .param("comuna", "COMUNATEST")
                         .param("nombre_local", "LOCALTEST")
         ).andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isGatewayTimeout());
     }
 }

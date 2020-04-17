@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 /**
  * @author Álvaro Tromilen (alvaro.tromilen@gmail.com)
  *
- * Handler para la manipulaciópn de errores manejados por la aplicación. Útil para aplicaciones que van escalando
- * con el tiempo (quizás en este pequeño ejemplo no era tan necesario).
+ * Se encarga de la manipulaciópn de excepciones que lanzará la aplicación. Útil para aplicaciones que van escalando
+ * con el tiempo y que da flexibilidad al momento de retornar mensajes de errores a la app cliente.
  */
 @ControllerAdvice
 public class ErrorHandler {

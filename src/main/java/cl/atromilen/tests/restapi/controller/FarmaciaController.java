@@ -44,10 +44,6 @@ public class FarmaciaController {
             listaFarmacias = farmaciaService.getFarmaciaByComuna(comuna);
         }
 
-        if (listaFarmacias == null) {
-            throw new FarmaciaNotFoundException(comuna, nombreLocal);
-        }
-
         return ResponseEntity.ok(listaFarmacias);
     }
 

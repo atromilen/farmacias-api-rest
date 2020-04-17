@@ -1,5 +1,6 @@
 package cl.atromilen.tests.restapi.controller;
 
+import cl.atromilen.tests.restapi.errorhandler.ComunasNotFoundException;
 import cl.atromilen.tests.restapi.mocks.ComunasMock;
 import cl.atromilen.tests.restapi.service.ComunaService;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ class ComunasControllerTest {
     private ComunaService comunaService;
 
     @Test
-    void devolverComunasConExito() throws Exception {
+    void testDevolverComunasConExito() throws Exception {
         Mockito.when(comunaService.getRMComunasAsCombobox())
                 .thenReturn(ComunasMock.getAll());
 
@@ -33,9 +34,9 @@ class ComunasControllerTest {
     }
 
     @Test
-    void consultaComunasAlMinsalTrajoUnOjetoNulo() throws Exception {
+    void testConsultaComunasAlMinsalTrajoUnOjetoNulo() throws Exception {
         Mockito.when(comunaService.getRMComunasAsCombobox())
-                .thenReturn(null);
+                .thenThrow(new ComunasNotFoundException());
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api-rest/comunas").contentType(MediaType.TEXT_HTML)

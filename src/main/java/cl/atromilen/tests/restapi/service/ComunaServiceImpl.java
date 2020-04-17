@@ -1,5 +1,6 @@
 package cl.atromilen.tests.restapi.service;
 
+import cl.atromilen.tests.restapi.errorhandler.ComunasNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,10 @@ public class ComunaServiceImpl implements ComunaService{
 
         ResponseEntity<String> response = restTemplate.postForEntity(URL, request, String.class);
         LOGGER.info("Response de la API Minsal: {}", response.getBody());
-        return response.getStatusCode() == HttpStatus.OK ? response.getBody() : null;
+
+        if (response.getBody() == null || "".equalsIgnoreCase(response.getBody())){
+            throw new ComunasNotFoundException();
+        }
+        return response.getBody();
     }
 }

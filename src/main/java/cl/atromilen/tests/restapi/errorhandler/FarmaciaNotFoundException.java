@@ -1,10 +1,5 @@
 package cl.atromilen.tests.restapi.errorhandler;
 
-/**
- * @author Álvaro Tromilen (alvaro.tromilen@gmail.com)
- *
- * Excepción que será lanzada cuando no se encuentren farmacias en una consulta.
- */
 public class FarmaciaNotFoundException extends RuntimeException {
     private String nombreComuna;
     private String nombreLocal;

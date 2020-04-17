@@ -1,23 +1,28 @@
 package cl.atromilen.tests.restapi.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author Álvaro Tromilen (alvaro.tromilen@gmail.com)
- *
- * Modelo representativo de un objeto de tipo Farmacia, con los datos a exponer en la respuesta JSON
- * de la API RESTful.
+ * <p>
+ * Modelo representativo de un objeto de tipo Farmacia. Bidireccional (usado para almacenar respuesta de farmacias
+ * de la API del MINSAL como para ser expuestas en nuestra propia API RESTful con el formateo necesario).
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LocalFarmacia {
+    @JsonProperty("local_nombre")
     private String nombreLocal;
-    @JsonIgnore
+    @JsonProperty(value = "local_direccion", access = JsonProperty.Access.WRITE_ONLY)
     private String direccion; //Se unificará su visualización mediante @JsonProperty
-    @JsonIgnore
+    @JsonProperty(value = "comuna_nombre", access = JsonProperty.Access.WRITE_ONLY)
     private String nombreComuna; //Se unificará su visualización mediante @JsonProperty
-    private Integer telefono;
-    private Double latitud;
-    private Double longitud;
+    @JsonProperty("local_telefono")
+    private String telefono;
+    @JsonProperty("local_lat")
+    private String latitud;
+    @JsonProperty("local_lng")
+    private String longitud;
 
     public String getNombreLocal() {
         return nombreLocal;
@@ -28,7 +33,7 @@ public class LocalFarmacia {
     }
 
     //Con esto, unifico la dirección y la comuna que estaban por separados, para entregar una dirección completa
-    @JsonProperty(value = "direccion", access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public String getDireccion() {
         return String.format("%s, %s", direccion, nombreComuna);
     }
@@ -45,28 +50,34 @@ public class LocalFarmacia {
         this.nombreComuna = nombreComuna;
     }
 
-    public Integer getTelefono() {
+    public String getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(Integer telefono) {
+    public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 
-    public Double getLatitud() {
+    public String getLatitud() {
         return latitud;
     }
 
-    public void setLatitud(Double latitud) {
+    public void setLatitud(String latitud) {
         this.latitud = latitud;
     }
 
-    public Double getLongitud() {
+    public String getLongitud() {
         return longitud;
     }
 
-    public void setLongitud(Double longitud) {
+    public void setLongitud(String longitud) {
         this.longitud = longitud;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("MinsalFarmacia[localNombre=%s, localDireccion=%s, localTelefono=%s," +
+                " localLat=%s, localLng=%s]", nombreLocal, getDireccion(), telefono, latitud, longitud);
     }
 }
 
