@@ -1,13 +1,9 @@
-package cl.atromilen.tests.restapi;
+package cl.atromilen.restapi.farmacias;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class ConsorcioTestRestApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
 
 }
