@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>cl.atromilen</groupId>
 	<artifactId>localFarmacias-rest</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>localFarmacias-rest</name>
 	<description>Farmacias operativas</description>
 
