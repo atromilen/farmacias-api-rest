@@ -2,7 +2,6 @@
 >farmacias-api-rest es una API RESTful que permite obtener farmacias de una comuna de la Región Metropolitana (Chile). Para
 >esto, utiliza como fuente de datos la API Rest del Minsal mediante _**RestTemplate**_.
 >
->Código fuente disponible en [Bitbucket](https://bitbucket.org/a-tromilen/farmacias-api-rest/src/master/)
 >
 #### Versiones rama master
 | Version | Autor|
